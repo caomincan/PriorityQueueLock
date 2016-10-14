@@ -1,0 +1,6 @@
+./src/mincan/q3/Test3.java
+./src/mincan/q3/PriorityCLH.java
+./src/mincan/q3/TestThread4.java
+./src/mincan/q3/Lock.java
+
+
