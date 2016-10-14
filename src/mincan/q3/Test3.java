@@ -10,7 +10,7 @@ public class Test3 {
 		// TODO Auto-generated method stub
 		int num = 0;
         if(args.length == 1 && args[0].matches("^[0-9]+")){
-        	num = Integer.valueOf(args[1]);
+        	num = Integer.valueOf(args[0]);
         }else{
         	System.out.println("Usage: java Test3 <num>");
         	System.out.println("num must be integer");
