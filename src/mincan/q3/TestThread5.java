@@ -3,7 +3,8 @@ package mincan.q3;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestThread5 extends Thread {
-public static AtomicInteger MAX_NUM_THREAD = new AtomicInteger(0);
+	public static AtomicInteger MAX_NUM_THREAD = new AtomicInteger(0);
+	public static int num = 0;
 	
 	private Lock mylock;
 	private int id;

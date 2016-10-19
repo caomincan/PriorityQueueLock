@@ -56,13 +56,14 @@ public class PriorityCLH implements Lock {
     	return;
     }
     while (qnode.locked) {} 
+    curr.set(qnode);
   }
   public void unlock() {
     QNode qnode = myNode.get(); // use my node
     queue.remove(qnode);
     QNode nxt = queue.peek();
-    curr.set(nxt);
     if(nxt != null) nxt.locked = false;
+    else curr.set(null);
   }
  
   static class QNode {  // Queue node inner class

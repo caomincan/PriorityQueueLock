@@ -67,6 +67,7 @@ public class Test3 {
             // start threads
             for(int i=0;i<num;i++) threads.get(i).start();
             // wait for threads
+            for(int i=0;i<num;i++)threads.get(i).join();
         	break;
         }
 	}
