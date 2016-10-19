@@ -12,6 +12,7 @@ package mincan.q3;
 
 import java.lang.ThreadLocal;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.*;
@@ -71,12 +72,47 @@ public class PriorityCLH implements Lock {
     public QNode(){
     	label = rand.nextInt(5);
     };
+    
+    public String toString(){
+    	return String.valueOf(locked);
+    }
   }
-
+  
+  public String toString(){
+	  Iterator<QNode> it = queue.iterator();
+	  String result = "";
+	  while(it.hasNext()){
+		  QNode tmp = it.next();
+		  result += tmp.toString()+" ";
+	  }
+	  return result;
+  }
 @Override
 public int getLabel() {
 	// TODO Auto-generated method stub
 	return myNode.get().label;
+}
+
+@Override
+public boolean tryLock(long time) {
+	// TODO Auto-generated method stub
+   QNode qnode = myNode.get(); // use my node
+   qnode.locked = true;
+   QNode pred = curr.getAndSet(qnode);
+   queue.offer(qnode);
+   // first node
+   if(pred == null){
+	   qnode.locked = false;
+	   return true;
+   }
+   long start = System.nanoTime();
+   long duration = 0;
+   while (duration < time*1000 ) {
+	   if(!qnode.locked) return true;
+	   duration = System.nanoTime()-start;
+   } 
+   queue.remove(qnode);
+   return false;
 }
 }
 
