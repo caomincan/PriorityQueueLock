@@ -8,18 +8,20 @@ public static AtomicInteger MAX_NUM_THREAD = new AtomicInteger(0);
 	private Lock mylock;
 	private int id;
 	private long count;
+	private long wait;
 	
-	public TestThread5(Lock lock){
+	public TestThread5(Lock lock,long time){
 		mylock = lock;
 		count = 0;
 		id = MAX_NUM_THREAD.getAndIncrement();
+		wait = time;
 	}
 	
 	@Override
 	public void run(){
 		System.out.println("Thread "+id+ " with priority " + mylock.getLabel()+" acquire Lock");
 		int try_num = 0;
-		while(!mylock.tryLock(MAX_NUM_THREAD.get()*100)){
+		while(!mylock.tryLock(wait)){
 			try_num++;
 		}
 		System.out.println("Thread "+id+ " with priority " + mylock.getLabel()+" acquire success with try time "+ try_num);

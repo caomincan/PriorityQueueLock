@@ -13,12 +13,16 @@ public class Test3 {
 		// TODO Auto-generated method stub
 		int num = 0;
 		String method = "";
-        if(args.length == 2 && args[1].matches("^[0-9]+") &&
+		long wait = 0;
+        if(args.length >= 2 && args[1].matches("^[0-9]+") &&
         		(args[0].equals(PROOF)|| args[0].equals(MEASURE))){
         	num = Integer.valueOf(args[1]);
         	method = args[0];
+        	try{
+        		wait = Integer.valueOf(args[2]);
+        	}catch(Exception e) {}
         }else{
-        	System.out.println("Usage: java mincan.q3.Test3 <Option> <Num>");
+        	System.out.println("Usage: java mincan.q3.Test3 <Option> <Num> <wait>");
         	System.out.println("Option: Proof | Measure");
         	System.out.println("num must be integer");
         	System.out.println("Defualt Proof PriorityCLH with 4 threads");
@@ -26,6 +30,7 @@ public class Test3 {
         }
         num = num==0? DEFAULT_NUM:num;
         method = method.compareTo("") == 0? PROOF: method;
+        wait = wait==0? 2000: wait;
         System.out.println("You have create "+num+" threads");
         
         List<Thread> threads = new ArrayList<Thread>();
@@ -58,7 +63,7 @@ public class Test3 {
         	break;
         case PROOF:
         	 // create threads
-            for(int i=0;i<num;i++) threads.add(new TestThread5(lock));
+            for(int i=0;i<num;i++) threads.add(new TestThread5(lock,wait));
             // start threads
             for(int i=0;i<num;i++) threads.get(i).start();
             // wait for threads
