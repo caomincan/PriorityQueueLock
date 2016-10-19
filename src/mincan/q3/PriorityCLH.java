@@ -110,7 +110,7 @@ public boolean tryLock(long time) {
    }
    long start = System.nanoTime();
    long duration = 0;
-   while (duration < time*1000 ) {
+   while (duration < time*2000 ) {
 	   if(!qnode.locked) return true;
 	   duration = System.nanoTime()-start;
    } 
