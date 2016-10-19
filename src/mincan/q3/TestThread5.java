@@ -24,6 +24,12 @@ public static AtomicInteger MAX_NUM_THREAD = new AtomicInteger(0);
 		while(!mylock.tryLock(wait)){
 			try_num++;
 		}
+		try {
+			Thread.sleep(2);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Thread "+id+ " with priority " + mylock.getLabel()+" acquire success with try time "+ try_num);
 		mylock.unlock();
 	}

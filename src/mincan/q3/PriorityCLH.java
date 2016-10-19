@@ -51,21 +51,18 @@ public class PriorityCLH implements Lock {
   public void lock() {
     QNode qnode = myNode.get(); // use my node
     qnode.locked = true;
-    QNode pred = curr.getAndSet(qnode);
     queue.offer(qnode); 
-    if(pred == null) qnode.locked = false;
+    if(curr.compareAndSet(null, qnode)){
+    	return;
+    }
     while (qnode.locked) {} 
-    
   }
   public void unlock() {
     QNode qnode = myNode.get(); // use my node
     queue.remove(qnode);
-    if(queue.size() == 0){
-    	if(curr.compareAndSet(qnode, null))
-    		return;
-    	while(queue.peek() == null && queue.size()>0){}
-    }
-    queue.peek().locked=false;
+    QNode nxt = queue.peek();
+    curr.set(nxt);
+    if(nxt != null) nxt.locked = false;
   }
  
   static class QNode {  // Queue node inner class
@@ -99,24 +96,20 @@ public int getLabel() {
 @Override
 public boolean tryLock(long time) {
 	// TODO Auto-generated method stub
-   QNode qnode = myNode.get(); // use my node
+   QNode qnode = myNode.get();
    qnode.locked = true;
-   QNode pred = curr.getAndSet(qnode);
    queue.offer(qnode);
    // first node
-   if(pred == null){
-	   return true;
+   if(curr.compareAndSet(null, qnode)){
+   	return true;
    }
    long start = System.nanoTime();
    long duration = 0;
    while (duration < time*1000000 ) {
-	   if(!qnode.locked) return true;
+	   if(!qnode.locked)return true;
 	   duration = System.nanoTime()-start;
    }
    queue.remove(qnode);
-   if(queue.size()==0){
-	   curr.compareAndSet(qnode, null);
-   }
    return false;
 }
 }
