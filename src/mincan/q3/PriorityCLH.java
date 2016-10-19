@@ -60,17 +60,20 @@ public class PriorityCLH implements Lock {
   public void unlock() {
     QNode qnode = myNode.get(); // use my node
     queue.remove(qnode);
-    QNode nxt = queue.peek();
-    if(nxt != null) nxt.locked=false;
-    curr.set(nxt);
+    if(queue.size() == 0){
+    	if(curr.compareAndSet(qnode, null))
+    		return;
+    	while(queue.peek() == null){}
+    }
+    queue.peek().locked=false;
   }
  
   static class QNode {  // Queue node inner class
 	public volatile int label = 1;
-    public volatile boolean locked = true;
+    public volatile boolean locked = false;
     
     public QNode(){
-    	label = rand.nextInt(5);
+    	label = rand.nextInt(5)+1;
     };
     
     public String toString(){

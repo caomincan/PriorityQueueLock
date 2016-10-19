@@ -36,6 +36,7 @@ public class Test3 {
         case MEASURE:
         	 // create threads
             for(int i=0;i<num;i++) threads.add(new TestThread4(lock));
+            Thread.sleep(1000);
             // start threads
             for(int i=0;i<num;i++) threads.get(i).start();
             // wait for threads

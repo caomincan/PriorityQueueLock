@@ -18,7 +18,7 @@ public static AtomicInteger MAX_NUM_THREAD = new AtomicInteger(0);
 	@Override
 	public void run(){
 		System.out.println("Thread "+id+ " with priority " + mylock.getLabel()+" acquire Lock");
-		if(mylock.tryLock(MAX_NUM_THREAD.get()*100)){
+		if(mylock.tryLock(MAX_NUM_THREAD.get()*200)){
 			System.out.println("Thread "+id+ " with priority " + mylock.getLabel()+" acquire success");
 			mylock.unlock();
 		}else{
