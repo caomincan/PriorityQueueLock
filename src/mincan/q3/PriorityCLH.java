@@ -63,7 +63,7 @@ public class PriorityCLH implements Lock {
     if(queue.size() == 0){
     	if(curr.compareAndSet(qnode, null))
     		return;
-    	while(queue.peek() == null){}
+    	while(queue.peek() == null && queue.size()>0){}
     }
     queue.peek().locked=false;
   }
@@ -105,7 +105,6 @@ public boolean tryLock(long time) {
    queue.offer(qnode);
    // first node
    if(pred == null){
-	   qnode.locked = false;
 	   return true;
    }
    long start = System.nanoTime();
@@ -113,9 +112,11 @@ public boolean tryLock(long time) {
    while (duration < time*1000000 ) {
 	   if(!qnode.locked) return true;
 	   duration = System.nanoTime()-start;
-   } 
+   }
    queue.remove(qnode);
-   curr.compareAndSet(qnode, null);
+   if(queue.size()==0){
+	   curr.compareAndSet(qnode, null);
+   }
    return false;
 }
 }
