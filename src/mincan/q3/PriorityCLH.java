@@ -101,9 +101,8 @@ public boolean tryLock(long time) {
    qnode.locked = true;
    queue.offer(qnode);
    // first node
-   if(curr.get() == null || queue.size() == 1){
-   	 curr.set(qnode);
-	 return true;
+   if(curr.compareAndSet(null, qnode)){
+   	return true;
    }
    long start = System.nanoTime();
    long duration = 0;
@@ -112,6 +111,7 @@ public boolean tryLock(long time) {
 	   duration = System.nanoTime()-start;
    }
    queue.remove(qnode);
+   if(queue.size()== 0) curr.set(null);
    return false;
 }
 }
